@@ -24,6 +24,11 @@ bot.on("message", message => {
       reddit.search(args[1]).then(results => {
         message.channel.send(results[0].url);
       });
+      break;
+    case "help":
+      message.channel.send(
+        "Link to github: https://github.com/sirAMPR/discord-bot"
+      );
   }
 });
 
