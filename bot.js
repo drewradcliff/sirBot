@@ -21,7 +21,8 @@ bot.on("message", message => {
       });
       break;
     case "reddit-search":
-      reddit.search(args[1]).then(results => {
+      args.shift();
+      reddit.search(args.join(" ")).then(results => {
         message.channel.send(results[0].url);
       });
       break;
@@ -29,6 +30,7 @@ bot.on("message", message => {
       message.channel.send(
         "Link to github: https://github.com/sirAMPR/discord-bot"
       );
+      break;
   }
 });
 
