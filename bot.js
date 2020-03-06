@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const reddit = require("./redditapi.js");
+const fetch = require("node-fetch");
 
 const bot = new Discord.Client();
 
@@ -12,6 +13,7 @@ bot.on("ready", () => {
 });
 
 bot.on("message", message => {
+  // commands
   let args = message.content.substring(PREFIX.length).split(" ");
 
   switch (args[0]) {
@@ -31,6 +33,20 @@ bot.on("message", message => {
         "Link to github: https://github.com/sirAMPR/discord-bot"
       );
       break;
+  }
+
+  // check for reddit link for video file
+  if (message.content.includes("reddit.com")) {
+    let url = message + ".json";
+    fetch(url)
+      .then(res => res.json())
+      .then(data =>
+        // check if link to reddit video
+        // if ()
+        message.channel.send(
+          data[0].data.children[0].data.secure_media.reddit_video.fallback_url
+        )
+      );
   }
 });
 
