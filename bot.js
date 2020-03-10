@@ -40,13 +40,14 @@ bot.on("message", message => {
     let url = message + ".json";
     fetch(url)
       .then(res => res.json())
-      .then(data =>
-        // check if link to reddit video
-        // if ()
-        message.channel.send(
-          data[0].data.children[0].data.secure_media.reddit_video.fallback_url
-        )
-      );
+      .then(data => {
+        if (data[0].data.children[0].data.secure_media) {
+          message.channel.send(
+            data[0].data.children[0].data.secure_media.reddit_video.fallback_url
+          );
+        }
+      })
+      .catch(error => console.error("Error:", error));
   }
 });
 
