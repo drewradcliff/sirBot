@@ -1,5 +1,10 @@
 # Discord Bot (sirBot)
 
+## Installation
+
+1. `npm install`
+2. `node bot.js`
+
 ## Commands
 
 Commands for this bot `!<command> [argument]`
