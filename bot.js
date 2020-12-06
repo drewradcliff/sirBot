@@ -8,8 +8,8 @@ const bot = new Discord.Client();
 require("dotenv").config();
 
 const PREFIX = "!";
-
-// const broadcast = bot.voice.createBroadcast();
+const USERNAME = "werd";
+const CHANNEL = "General";
 
 bot.once("ready", () => {
   console.log("Bot online");
@@ -24,17 +24,20 @@ bot.on("message", (message) => {
       message.channel.send("pong");
       break;
     case "reddit":
+    case "r":
       reddit.topSubreddit(args[1]).then((results) => {
         message.channel.send(results[0].url);
       });
       break;
     case "reddit-search":
+    case "rs":
       args.shift();
       reddit.search(args.join(" ")).then((results) => {
         message.channel.send(results[0].url);
       });
       break;
     case "help":
+    case "h":
       message.channel.send(
         "Link to github: https://github.com/sirAMPR/discord-bot"
       );
@@ -58,21 +61,19 @@ bot.on("message", (message) => {
 });
 
 bot.on("voiceStateUpdate", (oldState, newState) => {
-  let newChannel = newState.channel;
-  let oldChannel = oldState.channel;
-  
-  if (oldChannel === null && newChannel !== null) {
-    console.log(newState.member.user.username);
-    if (newState.member.user.username === "werd" && newChannel.name === "General") {
-      newState.channel.join().then((connection) => {
-        connection.play(
-          ytdl("https://www.youtube.com/watch?v=3qxX5KhCpTk&t=6s"),
-          {
-            quality: "highestaudio",
-          }
-        );
-      });
-    }
+  if (
+    newState.channel !== null &&
+    newState.member.user.username === USERNAME &&
+    newState.channel.name === CHANNEL
+  ) {
+    newState.channel.join().then((connection) => {
+      connection.play(
+        ytdl("https://www.youtube.com/watch?v=3qxX5KhCpTk&t=6s"),
+        {
+          quality: "highestaudio",
+        }
+      );
+    });
   }
 });
 
