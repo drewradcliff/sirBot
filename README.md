@@ -3,7 +3,7 @@
 ## Installation
 
 1. `npm install`
-2. `node bot.js`
+2. `npm start`
 
 ## Commands
 
