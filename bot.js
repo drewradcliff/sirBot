@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const reddit = require("./redditapi.js");
 const fetch = require("node-fetch");
+const ytdl = require("ytdl-core");
 
 const bot = new Discord.Client();
 
@@ -8,23 +9,28 @@ require("dotenv").config();
 
 const PREFIX = "!";
 
-bot.on("ready", () => {
+// const broadcast = bot.voice.createBroadcast();
+
+bot.once("ready", () => {
   console.log("Bot online");
 });
 
-bot.on("message", message => {
+bot.on("message", (message) => {
   // commands
   let args = message.content.substring(PREFIX.length).split(" ");
 
   switch (args[0]) {
+    case "ping":
+      message.channel.send("pong");
+      break;
     case "reddit":
-      reddit.topSubreddit(args[1]).then(results => {
+      reddit.topSubreddit(args[1]).then((results) => {
         message.channel.send(results[0].url);
       });
       break;
     case "reddit-search":
       args.shift();
-      reddit.search(args.join(" ")).then(results => {
+      reddit.search(args.join(" ")).then((results) => {
         message.channel.send(results[0].url);
       });
       break;
@@ -39,15 +45,34 @@ bot.on("message", message => {
   if (message.content.includes("reddit.com")) {
     let url = message + ".json";
     fetch(url)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data[0].data.children[0].data.secure_media) {
           message.channel.send(
             data[0].data.children[0].data.secure_media.reddit_video.fallback_url
           );
         }
       })
-      .catch(error => console.error("Error:", error));
+      .catch((error) => console.error("Error:", error));
+  }
+});
+
+bot.on("voiceStateUpdate", (oldState, newState) => {
+  let newChannel = newState.channel;
+  let oldChannel = oldState.channel;
+  
+  if (oldChannel === null && newChannel !== null) {
+    console.log(newState.member.user.username);
+    if (newState.member.user.username === "werd" && newChannel.name === "General") {
+      newState.channel.join().then((connection) => {
+        connection.play(
+          ytdl("https://www.youtube.com/watch?v=3qxX5KhCpTk&t=6s"),
+          {
+            quality: "highestaudio",
+          }
+        );
+      });
+    }
   }
 });
 
